@@ -75,7 +75,7 @@ const reduceStock = (
   itemID,
   itemPrice,
   itemQuantity,
-  productSales
+  productSales = 0
 ) => {
   connection
     .execute(
@@ -83,19 +83,20 @@ const reduceStock = (
     )
     .then(result => {
       let total = itemPrice * itemQuantity;
-      productSales += total;
+      let product_sales = productSales + total;
+      console.log(product_sales);
       console.log(`Your total is $${total}`);
       connection
         .execute(
-          `UPDATE products SET product_sales = '${productSales}' WHERE id = '${itemID}'`
+          `UPDATE products SET product_sales = '${product_sales}' WHERE id = '${itemID}'`
         )
         .then(result => {
           console.log("Product sales updated");
+          connection.end();
         })
         .catch(err => {
           console.log(err);
         });
-      connection.end();
     })
     .catch(err => {
       console.log(err);
